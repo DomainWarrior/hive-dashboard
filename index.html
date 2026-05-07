@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hive Dashboard</title>
+  <meta name="description" content="Real-time Hive blockchain account dashboard — view HP, HBD, RC, recent posts, and earnings at a glance.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐝</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">🐝 Hive<span>Dashboard</span></div>
+    <form id="search-form" autocomplete="off">
+      <input
+        type="text"
+        id="username-input"
+        placeholder="Enter Hive username..."
+        spellcheck="false"
+        aria-label="Hive username"
+      >
+      <button type="submit">Load ↵</button>
+    </form>
+  </div>
+</header>
+
+<main>
+
+  <!-- State screens -->
+  <div id="screen-idle" class="screen">
+    <div class="idle-content">
+      <div class="hive-hex" aria-hidden="true">🐝</div>
+      <h1>Hive Dashboard</h1>
+      <p>Enter any Hive username above to view their account stats, posts, and earnings in real time.</p>
+      <div class="example-accounts">
+        <span>Try:</span>
+        <button class="example-btn" data-user="missquibble">@missquibble</button>
+        <button class="example-btn" data-user="splinterlands">@splinterlands</button>
+        <button class="example-btn" data-user="peakd">@peakd</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-loading" class="screen hidden">
+    <div class="spinner" aria-label="Loading..."></div>
+    <p id="loading-text">Fetching account data...</p>
+  </div>
+
+  <div id="screen-error" class="screen hidden">
+    <div class="error-icon" aria-hidden="true">⚠️</div>
+    <p id="error-message">Something went wrong.</p>
+    <button class="btn" onclick="resetUI()">← Try Again</button>
+  </div>
+
+  <!-- Dashboard (hidden until data loads) -->
+  <div id="dashboard" class="hidden">
+
+    <!-- Profile header -->
+    <section class="profile-bar">
+      <div class="avatar-wrap">
+        <img id="profile-avatar" src="" alt="Profile avatar" loading="lazy">
+      </div>
+      <div class="profile-info">
+        <h2 id="profile-name"></h2>
+        <p id="profile-username" class="mono"></p>
+        <p id="profile-bio"></p>
+      </div>
+      <div class="profile-meta">
+        <div class="meta-item">
+          <span class="meta-val" id="meta-followers">—</span>
+          <span class="meta-label">Followers</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-val" id="meta-following">—</span>
+          <span class="meta-label">Following</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-val" id="meta-posts">—</span>
+          <span class="meta-label">Posts</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Balance cards -->
+    <section class="cards-grid" aria-label="Account balances">
+      <div class="card card--hive">
+        <div class="card-icon" aria-hidden="true">Ħ</div>
+        <div class="card-body">
+          <div class="card-label">HIVE Balance</div>
+          <div class="card-value" id="bal-hive">—</div>
+        </div>
+      </div>
+      <div class="card card--hp">
+        <div class="card-icon" aria-hidden="true">⚡</div>
+        <div class="card-body">
+          <div class="card-label">Hive Power</div>
+          <div class="card-value" id="bal-hp">—</div>
+        </div>
+      </div>
+      <div class="card card--hbd">
+        <div class="card-icon" aria-hidden="true">$</div>
+        <div class="card-body">
+          <div class="card-label">HBD Balance</div>
+          <div class="card-value" id="bal-hbd">—</div>
+        </div>
+      </div>
+      <div class="card card--rc">
+        <div class="card-icon" aria-hidden="true">🔋</div>
+        <div class="card-body">
+          <div class="card-label">Voting Power</div>
+          <div class="card-value" id="bal-vp">—</div>
+          <div class="vp-bar"><div class="vp-bar-fill" id="vp-bar-fill"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Posts grid -->
+    <section class="section">
+      <div class="section-header">
+        <h3>Recent Posts</h3>
+        <span id="posts-count" class="badge"></span>
+      </div>
+      <div id="posts-grid" class="posts-grid"></div>
+    </section>
+
+    <!-- Footer bar -->
+    <div class="dash-footer">
+      <span>Data from <a href="https://api.hive.blog" target="_blank" rel="noopener">api.hive.blog</a></span>
+      <span id="last-updated" class="mono"></span>
+      <a href="https://missquibble.com" target="_blank" rel="noopener">Built by MissQuibble</a>
+    </div>
+
+  </div><!-- /dashboard -->
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
